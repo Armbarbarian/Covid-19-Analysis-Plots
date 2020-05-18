@@ -32,7 +32,17 @@ colnames(df)[7] <- 'country'
 # subset rows then columns
 # new df with only UK data
 UK_df <- subset(df, country == 'United_Kingdom')
-head(UK_df)
+
+# invert the dataframe order of UK_df
+UK_rev <- UK_df[order(nrow(UK_df):1),]
+
+#US data
+US_df <- subset(df, country == 'United_States_of_America')
+
+# invert the dataframe order of UK_df
+US_rev <- US_df[order(nrow(UK_df):1),]
+
+
 # plotting ------------------------------------------------------
 library(ggplot2)
 
@@ -51,3 +61,28 @@ base_plot + geom_bar(stat = 'identity')
 # AES, GEOM_BAR ETC ARE CONFUSING ME....
 
 # TRY AGAIN LATER
+
+
+# 18/05/2020 - Monday
+# barplot
+barplot(UK_df$deaths)
+
+#line plot?
+plot(UK_df$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
+     main = 'UK deaths over time', lty = 1, pch = 18)
+
+
+# line plot with the new sorted df
+plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
+     main = 'UK deaths over time', lty = 1, pch = 18)
+
+# bar plot with updated df
+barplot(UK_rev$deaths)
+
+# using mfrow parameter for multiple plots for easy visualisation
+par(mfrow = c(2, 2))
+barplot(UK_rev$deaths)
+barplot(UK_rev$cases)
+barplot(US_rev$deaths)
+barplot(US_rev$cases)
+
