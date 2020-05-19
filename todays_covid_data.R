@@ -63,7 +63,7 @@ base_plot + geom_bar(stat = 'identity')
 # TRY AGAIN LATER
 
 
-# 18/05/2020 - Monday
+# 18/05/2020 - Monday ------------------------------------------------
 # barplot
 barplot(UK_df$deaths)
 
@@ -85,4 +85,26 @@ barplot(UK_rev$deaths)
 barplot(UK_rev$cases)
 barplot(US_rev$deaths)
 barplot(US_rev$cases)
+
+# 19/05/2020 - Tuesday ------------------------------------------------
+# using ggplot2 from youtube tutorial (1hour)
+
+ggplot(UK_rev, aes(dateRep, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
+ 
+# just get data for may (up to 16th)
+may_df <- subset(UK_rev, month == 5)
+
+# bar plot of just may 1st - 16th
+ggplot(may_df, aes(dateRep, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# line graph
+# doesn't work............
+ggplot(may_df, aes(dateRep, deaths)) +
+  geom_line()
+
+
+
+
 
