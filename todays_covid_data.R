@@ -28,7 +28,7 @@ df['CFR'] <- df$deaths / df$cases * 100
 colnames(df)[7] <- 'country'
 
 
-# Getting UK data -----------------------------------------------
+# Getting UK data -------------------------------------------------------------------------------------
 # subset rows then columns
 # new df with only UK data
 UK_df <- subset(df, country == 'United_Kingdom')
@@ -44,7 +44,7 @@ US_df <- subset(df, country == 'United_States_of_America')
 US_rev <- US_df[order(nrow(UK_df):1),]
 
 
-# plotting ------------------------------------------------------
+# plotting ---------------------------------------------------------------------------------------------
 library(ggplot2)
 
 # quick plot
@@ -64,7 +64,7 @@ base_plot + geom_bar(stat = 'identity')
 # TRY AGAIN LATER
 
 
-# 18/05/2020 - Monday ------------------------------------------------
+# 18/05/2020 - Monday ----------------------------------------------------------------------------------
 # barplot
 barplot(UK_df$deaths)
 
@@ -88,7 +88,7 @@ barplot(UK_rev$cases)
 barplot(US_rev$deaths)
 barplot(US_rev$cases)
 
-# 19/05/2020 - Tuesday ------------------------------------------------
+# 19/05/2020 - Tuesday -----------------------------------------------------------------------------
 # using ggplot2 from youtube tutorial (1hour)
 
 ggplot(UK_rev, aes(dateRep, deaths)) +
@@ -101,10 +101,46 @@ may_df <- subset(UK_rev, month == 5)
 ggplot(may_df, aes(dateRep, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076')
 
-# line graph
+# Predictive analysis -------------------------------------------------------------------------------
+# for time series
+# need to convert the data to a time series (ts) class
+# https://www.youtube.com/watch?v=0gf5iLTbiQM
 
+ts_UK = ts(UK_rev$deaths, start = c(2020, 1), frequency = 1)
+ts_UK
 
+plot(ts_UK)
 
+# Forecasting
+library(forecast)
 
+# Arima model
+# get coefficeitns and signma intervals and confidence values...serious stuff?
+model_arima <- auto.arima(ts_UK)
+model_arima
 
+# forecast
+forecast(model_arima, 20)
+confint(model_arima)
+plot(forecast(model_arima, 20))
 
+#Marima
+model_marima <- arima(ts_UK, order = c(0,1,1))
+model_marima
+plot(forecast(model_marima,20))
+
+# ETS method
+model_ets <- ets(ts_UK)
+model_ets
+forecast(model_ets,20)
+plot(forecast(model_ets,20))
+
+# Holt-Winters method (seasonality)
+model_hw <- HoltWinters(ts_UK)
+
+# TSLM
+model_tslm <- tslm(ts_UK ~ trend)
+model_tslm
+plot(forecast(model_tslm, h=20))
+
+# Understand nothing above ------------------------------------------------------------------------------
