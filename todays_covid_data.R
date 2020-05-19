@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_16may.xlsx')
+data <- read_excel('RAW_19may.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -32,6 +32,7 @@ colnames(df)[7] <- 'country'
 # subset rows then columns
 # new df with only UK data
 UK_df <- subset(df, country == 'United_Kingdom')
+head(UK_df)
 
 # invert the dataframe order of UK_df
 UK_rev <- UK_df[order(nrow(UK_df):1),]
@@ -80,6 +81,7 @@ plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
 barplot(UK_rev$deaths)
 
 # using mfrow parameter for multiple plots for easy visualisation
+# no that useful
 par(mfrow = c(2, 2))
 barplot(UK_rev$deaths)
 barplot(UK_rev$cases)
@@ -92,7 +94,7 @@ barplot(US_rev$cases)
 ggplot(UK_rev, aes(dateRep, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
  
-# just get data for may (up to 16th)
+# just get data for may (up to 19th)
 may_df <- subset(UK_rev, month == 5)
 
 # bar plot of just may 1st - 16th
@@ -100,9 +102,7 @@ ggplot(may_df, aes(dateRep, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076')
 
 # line graph
-# doesn't work............
-ggplot(may_df, aes(dateRep, deaths)) +
-  geom_line()
+
 
 
 
