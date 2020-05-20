@@ -85,11 +85,14 @@ may_df <- subset(UK_rev, month == 5)
 
 # bar plot of just may 1st - 16th
 ggplot(may_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076')
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  stat_smooth()
 
 # line graph
+# with smoothed line (trend)
 ggplot(UK_rev, aes(date, deaths)) +
-  geom_line(stat = 'identity', col = 'blue', size = 1)
+  geom_line(stat = 'identity', col = 'red', size = 1) +
+  stat_smooth(aes())
 
 # Predictive analysis -------------------------------------------------------------------------------
 # for time series
