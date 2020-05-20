@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_19may.xlsx')
+data <- read_excel('RAW_20may.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -26,7 +26,7 @@ df['CFR'] <- df$deaths / df$cases * 100
 
 # change column name to country
 colnames(df)[7] <- 'country'
-
+colnames(df)[1] <- 'date'
 
 # Getting UK data -------------------------------------------------------------------------------------
 # subset rows then columns
@@ -37,25 +37,17 @@ head(UK_df)
 # invert the dataframe order of UK_df
 UK_rev <- UK_df[order(nrow(UK_df):1),]
 
-#US data
-US_df <- subset(df, country == 'United_States_of_America')
-
-# invert the dataframe order of UK_df
-US_rev <- US_df[order(nrow(UK_df):1),]
-
 
 # plotting ---------------------------------------------------------------------------------------------
 library(ggplot2)
 
 # quick plot
 # give a sort of scatter
-qplot(dateRep, deaths, data = UK_df)
+qplot(date, deaths, data = UK_df)
 
-# basic histogram
-qplot(deaths, data = UK_df)
 
 # using ggplot bar graph
-base_plot <- ggplot(data = UK_df, aes(x=dateRep, y=deaths))
+base_plot <- ggplot(data = UK_df, aes(x=date, y=deaths))
 base_plot + geom_bar(stat = 'identity')
 
 # STILL NOT GETTING THE DESIRED OUTPUT
@@ -65,13 +57,6 @@ base_plot + geom_bar(stat = 'identity')
 
 
 # 18/05/2020 - Monday ----------------------------------------------------------------------------------
-# barplot
-barplot(UK_df$deaths)
-
-#line plot?
-plot(UK_df$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
-     main = 'UK deaths over time', lty = 1, pch = 18)
-
 
 # line plot with the new sorted df
 plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
@@ -82,24 +67,29 @@ barplot(UK_rev$deaths)
 
 # using mfrow parameter for multiple plots for easy visualisation
 # no that useful
-par(mfrow = c(2, 2))
+'par(mfrow = c(2, 2))
 barplot(UK_rev$deaths)
 barplot(UK_rev$cases)
 barplot(US_rev$deaths)
 barplot(US_rev$cases)
-
+'
+# ---------------------------------------- GGPLOT --------------------------------------------------
 # 19/05/2020 - Tuesday -----------------------------------------------------------------------------
 # using ggplot2 from youtube tutorial (1hour)
 
-ggplot(UK_rev, aes(dateRep, deaths)) +
+ggplot(UK_rev, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
  
 # just get data for may (up to 19th)
 may_df <- subset(UK_rev, month == 5)
 
 # bar plot of just may 1st - 16th
-ggplot(may_df, aes(dateRep, deaths)) +
+ggplot(may_df, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076')
+
+# line graph
+ggplot(UK_rev, aes(date, deaths)) +
+  geom_line(stat = 'identity', col = 'blue', size = 1)
 
 # Predictive analysis -------------------------------------------------------------------------------
 # for time series
