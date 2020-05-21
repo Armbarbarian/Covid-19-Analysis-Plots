@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_20may.xlsx')
+data <- read_excel('RAW_21may.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -91,7 +91,7 @@ ggplot(may_df, aes(date, deaths)) +
 # line graph
 # with smoothed line (trend)
 ggplot(UK_rev, aes(date, deaths)) +
-  geom_line(stat = 'identity', col = 'red', size = 1) +
+  geom_line(stat = 'identity', col = 'red', size = 0.5) +
   stat_smooth(aes())
 
 # Predictive analysis -------------------------------------------------------------------------------
