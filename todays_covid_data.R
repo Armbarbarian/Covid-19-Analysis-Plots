@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_21may.xlsx')
+data <- read_excel('RAW_28may.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -28,15 +28,22 @@ df['CFR'] <- df$deaths / df$cases * 100
 colnames(df)[7] <- 'country'
 colnames(df)[1] <- 'date'
 
-# Getting UK data -------------------------------------------------------------------------------------
+
+# UK data -------------------------------------------------------------------------------------
 # subset rows then columns
 # new df with only UK data
 UK_df <- subset(df, country == 'United_Kingdom')
-head(UK_df)
+
 
 # invert the dataframe order of UK_df
 UK_rev <- UK_df[order(nrow(UK_df):1),]
 
+
+# US Data -----------------------------------------------------------------------------------
+US_df <- subset(df, country == 'United_States_of_America')
+
+# invert the dataframe order of US_df
+US_rev <- US_df[order(nrow(US_df):1),]
 
 # plotting ---------------------------------------------------------------------------------------------
 library(ggplot2)
@@ -56,7 +63,7 @@ base_plot + geom_bar(stat = 'identity')
 # TRY AGAIN LATER
 
 
-# 18/05/2020 - Monday ----------------------------------------------------------------------------------
+# 18/05/2020 - Monday 
 
 # line plot with the new sorted df
 plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
@@ -73,8 +80,8 @@ barplot(UK_rev$cases)
 barplot(US_rev$deaths)
 barplot(US_rev$cases)
 '
-# ---------------------------------------- GGPLOT --------------------------------------------------
-# 19/05/2020 - Tuesday -----------------------------------------------------------------------------
+# ---------------------------------------- GGPLOT  UK --------------------------------------------------
+# 19/05/2020 - Tuesday 
 # using ggplot2 from youtube tutorial (1hour)
 
 ggplot(UK_rev, aes(date, deaths)) +
@@ -93,6 +100,39 @@ ggplot(may_df, aes(date, deaths)) +
 ggplot(UK_rev, aes(date, deaths)) +
   geom_line(stat = 'identity', col = 'red', size = 0.5) +
   stat_smooth(aes())
+
+
+# ------------------------------------------US plots ----------------------------------------------------
+ggplot(US_rev, aes(date, deaths)) +
+  geom_line(stat = 'identity')
+
+# US May data
+US_may_df <- subset(US_rev, month == 5)
+
+# May plot
+# bar plot of just may 1st - 16th
+ggplot(US_may_df, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  stat_smooth()
+
+# Overall bar chart with smoothed line
+ggplot(US_rev, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') + 
+  stat_smooth()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Predictive analysis -------------------------------------------------------------------------------
 # for time series
