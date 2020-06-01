@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_28may.xlsx')
+data <- read_excel('RAW_1june.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -72,14 +72,6 @@ plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
 # bar plot with updated df
 barplot(UK_rev$deaths)
 
-# using mfrow parameter for multiple plots for easy visualisation
-# no that useful
-'par(mfrow = c(2, 2))
-barplot(UK_rev$deaths)
-barplot(UK_rev$cases)
-barplot(US_rev$deaths)
-barplot(US_rev$cases)
-'
 # ---------------------------------------- GGPLOT  UK --------------------------------------------------
 # 19/05/2020 - Tuesday 
 # using ggplot2 from youtube tutorial (1hour)
@@ -122,7 +114,53 @@ ggplot(US_rev, aes(date, deaths)) +
 
 
 
+# ---------------------- Top 10 countries ------------------
 
+# from the csv generated from Python in VS code in the My_project folder (not for R)
+# this is a sorted csv by deaths
+june_1_data <- read.csv('C:\\Users\\Danie\\Desktop\\My_project\\1st_June_data_deaths.csv')
+june_df_py <- data.frame(june_1_data)
+
+
+# sorted generated from the original data from R folder
+# need to get todays data first
+# using dplyr is the easiest way for data manipulation here
+# https://www.youtube.com/watch?v=jWjqLW-u3hc&t=335s
+# using the filter function
+
+library(dplyr)
+
+june1_df <- filter(sort_df, month==6, day==1)
+
+
+# put the top10 into an object and run ggplot on that
+top10 <- june1_df %>% head(10)
+
+is.factor(top10$country)
+# False
+
+# trying to change the df vectors/character/factor on country
+# to not get the ggplot in alphabetical order
+# below code stopped the alphabetical ggplot order
+# https://stackoverflow.com/questions/12774210/how-do-you-specifically-order-ggplot2-x-axis-instead-of-alphabetical-order
+top10$country <- as.character(top10$country)
+top10$country <- factor(top10$country, levels = unique(top10$country))
+
+
+# original in alphabetical order (wasn't by design)
+# had an issue with the coord_flip giving an upside down image
+# fixed with  scale_x_discrete(limits = rev(levels(top10$country)))
+ggplot(top10, aes(x = country, y = deaths)) +
+  geom_bar(stat='identity', fill='midnightblue') + 
+  coord_flip() +
+  scale_x_discrete(limits = rev(levels(top10$country))) + 
+  ggtitle('Number of deaths on June 1st - Top 10 Countries')
+
+# ggsave('top10_1st_june.png')
+
+
+
+# ---------------------- UK cases --------------------------
 
 
 
