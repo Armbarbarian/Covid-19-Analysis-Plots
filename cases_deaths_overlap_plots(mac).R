@@ -1,26 +1,33 @@
 library(dplyr)
 library(ggplot2)
+library(readxl)
 
 # read in the csv from owid covd-19 data
-df <- read.csv('owid-2june.csv')
+data <- read_excel('owid-9june.xlsx')
+
+# turn into df
+df <- data.frame(data)
+head(df)
+colnames(df)
 
 # changing the names of columns
-colnames(df)[2] <- c('countries')
+colnames(df)[3] <- c('countries')
+colnames(df)
 
 # get only UK data
 UK <- subset(df, countries == 'United Kingdom')
 head(UK)
 
-# time series as.Date()
-day = as.Date("2019-12-31") - 0:156
 
-# drop the iso_code column
+# drop the iso_code & continent column
 UK <- subset(UK, select = -c(iso_code))
+UK <- subset(UK, select = -c(continent))
+head(UK)
 
 # bar plot of new deaths per day 
 ggplot(UK, aes(date, new_deaths)) + 
   geom_bar(stat = 'identity', fill = 'darkred') +
-  ggtitle('New Deaths Per Day UK June 2nd')
+  ggtitle('New Deaths Per Day UK June 9th')
 
 
 # line plot of new deaths per day
@@ -83,6 +90,49 @@ ggplot(UK) +
                    labels = c('1st Feb','1st March','1st April','1st May','1st June')) 
 
 # ggsave('Overlap of New Deaths and Cases in the UK up to June 2nd.png')  
+
+
+
+# ------------------------------------ SPAIN ----------------------------------
+
+# spain df as sp
+esp <- subset(df, countries =='Spain')
+
+# new cases in UK
+ggplot(esp, aes(date, new_cases)) +
+  geom_bar(stat = 'identity', fill = 'midnightblue') +
+  ggtitle('New Cases Per Day ESP June 2nd')
+
+
+# New deaths in spain
+# some data seems wrong here... negaitve deaths?
+ggplot(esp, aes(date, new_deaths)) +
+  geom_line(group=1) +
+  ggtitle('New Deaths Per Day ESP June 2nd')
+
+# total cases UK + total deaths ESP on SAME PLOT
+ggplot(esp) +
+  geom_bar(aes(x = date, y = total_cases), fill = 'lightblue', stat='identity') +
+  geom_line(aes(x = date, y = total_deaths), group=1, color='darkred', size = 1) +
+  ggtitle('Overlap of Total Deaths and Total Cases ESP June 2nd') +
+  theme(plot.title = element_text(size = 30, face = "bold"))
+
+# overlap of cases and deaths in spain
+ggplot(esp) +
+  geom_bar(aes(x = date, y = new_cases), fill = 'lightblue', stat='identity') +
+  geom_line(aes(x = date, y = new_deaths), group=1, color='darkred', size = 1) +
+  ggtitle('ESP Overlap of New Deaths and Total Cases June 2nd') +
+  theme(plot.title = element_text(size = 15, face = "bold")) +
+  xlab('Date') + 
+  ylab('') +
+  scale_x_discrete(breaks = c('2020-02-01', '2020-03-01', '2020-04-01', '2020-05-01', '2020-06-01'),
+                   labels = c('1st Feb','1st March','1st April','1st May','1st June')) 
+
+
+
+
+
+
 
 
 

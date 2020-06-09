@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_1june.xlsx')
+data <- read_excel('RAW_9june.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -33,7 +33,7 @@ colnames(df)[1] <- 'date'
 # subset rows then columns
 # new df with only UK data
 UK_df <- subset(df, country == 'United_Kingdom')
-
+head(UK_df)
 
 # invert the dataframe order of UK_df
 UK_rev <- UK_df[order(nrow(UK_df):1),]
@@ -80,18 +80,35 @@ ggplot(UK_rev, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
  
 # just get data for may (up to 19th)
+jan_df <- subset(UK_rev, month == 1)
+feb_df <- subset(UK_rev, month == 2)
+mar_df <- subset(UK_rev, month == 3)
+apr_df <- subset(UK_rev, month == 4)
 may_df <- subset(UK_rev, month == 5)
+jun_df <- subset(UK_rev, month == 6)
 
-# bar plot of just may 1st - 16th
+# bar plot of mar
+ggplot(mar_df, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# bar plot of apr
+ggplot(apr_df, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# bar plot of may
 ggplot(may_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076') +
-  stat_smooth()
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# bar plot of jun
+ggplot(jun_df, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
 
 # line graph
 # with smoothed line (trend)
 ggplot(UK_rev, aes(date, deaths)) +
   geom_line(stat = 'identity', col = 'red', size = 0.5) +
   stat_smooth(aes())
+
 
 
 # ------------------------------------------US plots ----------------------------------------------------
