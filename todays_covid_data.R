@@ -4,7 +4,7 @@
 library('readxl')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_9june.xlsx')
+data <- read_excel('RAW_15june.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -45,8 +45,42 @@ US_df <- subset(df, country == 'United_States_of_America')
 # invert the dataframe order of US_df
 US_rev <- US_df[order(nrow(US_df):1),]
 
+# Sweden data -------------------------------------------------------------------------------------
+# subset rows then columns
+# new df with only UK data
+swe_df <- subset(df, country == 'Sweden')
+head(swe_df)
+
+# invert the dataframe order of UK_df
+swe_rev <- swe_df[order(nrow(UK_df):1),]
+head(swe_rev)
+
+
+
+
+
+
+
+
+
+
 # plotting ---------------------------------------------------------------------------------------------
 library(ggplot2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # quick plot
 # give a sort of scatter
@@ -178,6 +212,53 @@ ggplot(top10, aes(x = country, y = deaths)) +
 
 
 # ---------------------- UK cases --------------------------
+
+ggplot(UK_rev, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
+
+
+
+
+
+# ---------------------- Sweden --------------------------
+
+ggplot(swe_rev, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
+
+# just get data for may (up to 19th)
+jan_swe <- subset(swe_rev, month == 1)
+feb_swe <- subset(swe_rev, month == 2)
+mar_swe <- subset(swe_rev, month == 3)
+apr_swe <- subset(swe_rev, month == 4)
+may_swe <- subset(swe_rev, month == 5)
+jun_swe <- subset(swe_rev, month == 6)
+
+# bar plot of mar
+ggplot(mar_swe, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# bar plot of apr
+ggplot(apr_swe, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# bar plot of may
+ggplot(may_swe, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# bar plot of jun
+ggplot(jun_swe, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076')
+
+# line graph
+# with smoothed line (trend)
+ggplot(swe_rev, aes(date, deaths)) +
+  geom_line(stat = 'identity', col = 'red', size = 0.5) +
+  stat_smooth(aes())
+
+# ----------------------- Sweden Cases -------------------------
+
+ggplot(swe_rev, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
 
 
 
