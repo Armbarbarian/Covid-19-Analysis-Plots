@@ -2,13 +2,15 @@
 
 # open the relevant library 
 library('readxl')
+library('dplyr')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_15june.xlsx')
+data <- read_excel('RAW_25june.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
-
+colnames(df)[7] <- 'country'
+colnames(df)[1] <- 'date'
 # see if its working
 head(df)
 
@@ -24,20 +26,17 @@ head(df)
 # $ like a select column character
 df['CFR'] <- df$deaths / df$cases * 100
 
-# change column name to country
-colnames(df)[7] <- 'country'
-colnames(df)[1] <- 'date'
 
 
 # UK data -------------------------------------------------------------------------------------
 # subset rows then columns
 # new df with only UK data
 UK_df <- subset(df, country == 'United_Kingdom')
-head(UK_df)
+head(UK_df, 12)
 
 # invert the dataframe order of UK_df
 UK_rev <- UK_df[order(nrow(UK_df):1),]
-
+tail(UK_rev)
 
 # US Data -----------------------------------------------------------------------------------
 US_df <- subset(df, country == 'United_States_of_America')
@@ -56,7 +55,14 @@ swe_rev <- swe_df[order(nrow(UK_df):1),]
 head(swe_rev)
 
 
+# Brazil data -------------------------------------------------------------------------------------
+# subset rows then columns
+# new df with only UK data
+brz_df <- subset(df, country == 'Brazil')
+head(brz_df)
 
+# invert the dataframe order of UK_df
+brz_rev <- brz_df[order(nrow(UK_df):1),]
 
 
 
@@ -106,6 +112,14 @@ plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
 # bar plot with updated df
 barplot(UK_rev$deaths)
 
+
+
+
+
+
+
+
+
 # ---------------------------------------- GGPLOT  UK --------------------------------------------------
 # 19/05/2020 - Tuesday 
 # using ggplot2 from youtube tutorial (1hour)
@@ -135,7 +149,9 @@ ggplot(may_df, aes(date, deaths)) +
 
 # bar plot of jun
 ggplot(jun_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076')
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  stat_smooth()
+
 
 # line graph
 # with smoothed line (trend)
@@ -150,11 +166,11 @@ ggplot(US_rev, aes(date, deaths)) +
   geom_line(stat = 'identity')
 
 # US May data
-US_may_df <- subset(US_rev, month == 5)
+US_june_df <- subset(US_rev, month == 6)
 
 # May plot
 # bar plot of just may 1st - 16th
-ggplot(US_may_df, aes(date, deaths)) +
+ggplot(US_june_df, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076') +
   stat_smooth()
 
@@ -181,7 +197,7 @@ june_df_py <- data.frame(june_1_data)
 
 library(dplyr)
 
-june1_df <- filter(sort_df, month==6, day==1)
+june25_df <- filter(df, month==6, day==25)
 
 
 # put the top10 into an object and run ggplot on that
@@ -205,7 +221,7 @@ ggplot(top10, aes(x = country, y = deaths)) +
   geom_bar(stat='identity', fill='midnightblue') + 
   coord_flip() +
   scale_x_discrete(limits = rev(levels(top10$country))) + 
-  ggtitle('Number of deaths on June 1st - Top 10 Countries')
+  ggtitle('Number of deaths on June 25th - Top 10 Countries')
 
 # ggsave('top10_1st_june.png')
 
