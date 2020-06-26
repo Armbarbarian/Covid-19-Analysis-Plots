@@ -9,15 +9,15 @@ data <- read_excel('RAW_26june.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
-colnames(df)[7] <- 'country'
+colnames(df)[7] <- 'countries'
 colnames(df)[1] <- 'date'
-# see if its working
-head(df)
 
-# drop the colunms I do not want in the df
-# using subset()
-# once you have run this it updates
-df = subset(df, select = -c(countryterritoryCode))
+# drop what we don't care about
+df <- subset(df, select = -c(continentExp))
+df <- subset(df, select = -c(geoId))
+df <- subset(df, select = -c(popData2019))
+df <- subset(df, select = -c(countryterritoryCode))
+
 head(df)
 
 # df changed forever now
@@ -26,25 +26,43 @@ head(df)
 # $ like a select column character
 df['CFR'] <- df$deaths / df$cases * 100
 
+#add column called cumsum
 
 
-# UK data -------------------------------------------------------------------------------------
+
+# -------------------------------------UK data --------------------------------------------------
 # subset rows then columns
 # new df with only UK data
-UK_df <- subset(df, country == 'United_Kingdom')
+UK_df <- subset(df, countries == 'United_Kingdom')
 head(UK_df, 12)
 
+# drop until March
+# using subset() and !=
+UK_df <- subset(UK_df, month!=12 & month!=1 & month!=2)
+tail(UK_df)
 # invert the dataframe order of UK_df
 UK_rev <- UK_df[order(nrow(UK_df):1),]
+
+head(UK_rev)
+
+# cummulative sum in a new colum to see the linear totals
+# from: https://rveryday.wordpress.com/2016/11/17/create-a-cumulative-sum-column-in-r/
+UK_rev[,'cum_deaths'] <- cumsum(UK_rev$deaths)
+UK_rev[,'cum_cases'] <- cumsum(UK_rev$cases)
 tail(UK_rev)
 
-# US Data -----------------------------------------------------------------------------------
-US_df <- subset(df, country == 'United_States_of_America')
+
+
+
+
+# -------------------------------------US Data ----------------------------------------------------
 
 # invert the dataframe order of US_df
 US_rev <- US_df[order(nrow(US_df):1),]
 
-# Sweden data -------------------------------------------------------------------------------------
+
+
+# -----------------------------------Sweden data -------------------------------------------------
 # subset rows then columns
 # new df with only UK data
 swe_df <- subset(df, country == 'Sweden')
@@ -55,7 +73,7 @@ swe_rev <- swe_df[order(nrow(UK_df):1),]
 head(swe_rev)
 
 
-# Brazil data -------------------------------------------------------------------------------------
+# ----------------------------------Brazil data ---------------------------------------------------
 # subset rows then columns
 # new df with only UK data
 brz_df <- subset(df, country == 'Brazil')
@@ -68,55 +86,7 @@ brz_rev <- brz_df[order(nrow(UK_df):1),]
 
 
 
-
-
-# plotting ---------------------------------------------------------------------------------------------
 library(ggplot2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# quick plot
-# give a sort of scatter
-qplot(date, deaths, data = UK_df)
-
-
-# using ggplot bar graph
-base_plot <- ggplot(data = UK_df, aes(x=date, y=deaths))
-base_plot + geom_bar(stat = 'identity')
-
-# STILL NOT GETTING THE DESIRED OUTPUT
-# AES, GEOM_BAR ETC ARE CONFUSING ME....
-
-# TRY AGAIN LATER
-
-
-# 18/05/2020 - Monday 
-
-# line plot with the new sorted df
-plot(UK_rev$deaths, xlab = 'Date',ylab = 'Deaths',type = 'o',col = 'blue',
-     main = 'UK deaths over time', lty = 1, pch = 18)
-
-# bar plot with updated df
-barplot(UK_rev$deaths)
-
-
-
-
-
-
 
 
 
@@ -128,8 +98,8 @@ ggplot(UK_rev, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
  
 # just get data for may (up to 19th)
-jan_df <- subset(UK_rev, month == 1)
-feb_df <- subset(UK_rev, month == 2)
+#jan_df <- subset(UK_rev, month == 1)
+#feb_df <- subset(UK_rev, month == 2)
 mar_df <- subset(UK_rev, month == 3)
 apr_df <- subset(UK_rev, month == 4)
 may_df <- subset(UK_rev, month == 5)
@@ -159,7 +129,7 @@ ggplot(jun_df, aes(date, deaths)) +
   geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3) +
   ggtitle('Current June Deaths in The UK due to COVID-19')
 
-  # bar plot of jun
+# bar plot of jun
 # labels from: https://stackoverflow.com/questions/12018499/how-to-put-labels-over-geom-bar-for-each-bar-in-r-with-ggplot2
 
 
@@ -167,8 +137,32 @@ ggplot(jun_df, aes(date, deaths)) +
 # line graph
 # with smoothed line (trend)
 ggplot(UK_rev, aes(date, deaths)) +
-    geom_line(stat = 'identity', col = 'red', size = 0.6) +
-  stat_smooth(aes())
+  geom_line(stat = 'identity', col = 'red', size = 0.6) +
+  stat_smooth()
+  
+
+# TOTAL DEATHS
+# bar plot
+ggplot(UK_rev, aes(date, cum_deaths)) +
+  geom_bar(stat = 'identity', fill = 'darkred') +
+  ggtitle('Total Deaths in The UK due to COVID-19')
+
+# TOTAL CASES
+# bar plot
+ggplot(UK_rev, aes(date, cum_cases)) +
+  geom_bar(stat = 'identity', fill = 'darkblue') +
+  ggtitle('Total Cases in The UK due to COVID-19')
+
+# Overlap
+ggplot(UK_rev) +
+  geom_bar(aes(x = date, y = cum_cases), fill = 'lightblue', stat='identity') +
+  geom_line(aes(x = date, y = cum_deaths), group=1, color='darkred', size = 1) +
+  ggtitle('Overlap of Total Deaths and Total Cases June 2nd') +
+  theme(plot.title = element_text(size = 30, face = "bold"))
+
+
+
+
 
 
 
@@ -193,7 +187,7 @@ ggplot(US_rev, aes(date, deaths)) +
 
 
 
-# ---------------------- Top 10 countries ------------------
+# ----------------------------------------Top 10 countries ------------------------------------------
 
 # from the csv generated from Python in VS code in the My_project folder (not for R)
 # this is a sorted csv by deaths
