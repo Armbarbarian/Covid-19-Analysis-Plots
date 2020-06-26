@@ -5,7 +5,7 @@ library('readxl')
 library('dplyr')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_25june.xlsx')
+data <- read_excel('RAW_26june.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -137,26 +137,37 @@ jun_df <- subset(UK_rev, month == 6)
 
 # bar plot of mar
 ggplot(mar_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076')
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3)+
+  ggtitle('Current March Deaths in The UK due to COVID-19')
 
 # bar plot of apr
 ggplot(apr_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076')
+  geom_bar(stat = 'identity', fill = '#ff0076') + 
+  geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3)+
+  ggtitle('Current April Deaths in The UK due to COVID-19')
 
 # bar plot of may
 ggplot(may_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076')
-
-# bar plot of jun
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3)+
+  ggtitle('Current May Deaths in The UK due to COVID-19')
+  
+# bar plot of June
 ggplot(jun_df, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076') +
-  stat_smooth()
+  geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3) +
+  ggtitle('Current June Deaths in The UK due to COVID-19')
+
+  # bar plot of jun
+# labels from: https://stackoverflow.com/questions/12018499/how-to-put-labels-over-geom-bar-for-each-bar-in-r-with-ggplot2
+
 
 
 # line graph
 # with smoothed line (trend)
 ggplot(UK_rev, aes(date, deaths)) +
-  geom_line(stat = 'identity', col = 'red', size = 0.5) +
+    geom_line(stat = 'identity', col = 'red', size = 0.6) +
   stat_smooth(aes())
 
 
@@ -165,14 +176,15 @@ ggplot(UK_rev, aes(date, deaths)) +
 ggplot(US_rev, aes(date, deaths)) +
   geom_line(stat = 'identity')
 
-# US May data
+# US June data
 US_june_df <- subset(US_rev, month == 6)
 
-# May plot
-# bar plot of just may 1st - 16th
+
+# bar plot of just June
 ggplot(US_june_df, aes(date, deaths)) +
-  geom_bar(stat = 'identity', fill = '#ff0076') +
-  stat_smooth()
+  geom_bar(stat = 'identity', fill = 'darkred') +
+  ggtitle('Current June Deaths in The USA due to COVID-19') +
+  geom_text(aes(label=deaths), position=position_dodge(width=0.9), vjust=-0.25, size=3)
 
 # Overall bar chart with smoothed line
 ggplot(US_rev, aes(date, deaths)) +
