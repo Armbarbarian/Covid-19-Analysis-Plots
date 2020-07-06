@@ -2,7 +2,7 @@
 
 library('readxl')
 
-data <- read_excel('RAW_22june.xlsx')
+data <- read_excel('RAW_26june.xlsx')
 
 df <- data.frame(data)
 
@@ -13,7 +13,7 @@ colnames(df)[1] <- 'date'
 # df of todays numbers using dplyr
 library(dplyr)
 
-today <- filter(df, month==6, day==22)
+today <- filter(df, month==6, day==26)
 head(today)
 
 # add up the total cases and total deaths for ALL countries

@@ -5,7 +5,7 @@ library('readxl')
 library('dplyr')
 
 # read into R with read_excel (same as python)
-data <- read_excel('RAW_26june.xlsx')
+data <- read_excel('RAW_5july.xlsx')
 
 # turn into a df with data.frame
 df <- data.frame(data)
@@ -104,6 +104,7 @@ mar_df <- subset(UK_rev, month == 3)
 apr_df <- subset(UK_rev, month == 4)
 may_df <- subset(UK_rev, month == 5)
 jun_df <- subset(UK_rev, month == 6)
+jul_df <- subset(UK_rev, month == 7)
 
 # bar plot of mar
 ggplot(mar_df, aes(date, deaths)) +
@@ -128,6 +129,17 @@ ggplot(jun_df, aes(date, deaths)) +
   geom_bar(stat = 'identity', fill = '#ff0076') +
   geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3) +
   ggtitle('Current June Deaths in The UK due to COVID-19')
+
+# bar plot of July
+ggplot(jul_df, aes(date, deaths)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=deaths), position = position_dodge(width = 0.9), vjust=-0.25, size=3) +
+  ggtitle('Current June Deaths in The UK due to COVID-19')
+
+
+
+
+
 
 # bar plot of jun
 # labels from: https://stackoverflow.com/questions/12018499/how-to-put-labels-over-geom-bar-for-each-bar-in-r-with-ggplot2
