@@ -91,7 +91,8 @@ library(ggplot2)
 
 
 # ---------------------------------------- GGPLOT  UK --------------------------------------------------
-# 19/05/2020 - Tuesday 
+
+# ---------------------------------------- Deaths -------------------------------------------------
 # using ggplot2 from youtube tutorial (1hour)
 
 ggplot(UK_rev, aes(date, deaths)) +
@@ -151,7 +152,52 @@ ggplot(jul_df, aes(date, deaths)) +
 ggplot(UK_rev, aes(date, deaths)) +
   geom_line(stat = 'identity', col = 'red', size = 0.6) +
   stat_smooth()
-  
+
+
+# -------------------------------------------------------- CASES --------------------------------------------------
+
+ggplot(UK_rev, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076', col = 'black')
+
+# just get data for may (up to 19th)
+#jan_df <- subset(UK_rev, month == 1)
+#feb_df <- subset(UK_rev, month == 2)
+mar_df <- subset(UK_rev, month == 3)
+apr_df <- subset(UK_rev, month == 4)
+may_df <- subset(UK_rev, month == 5)
+jun_df <- subset(UK_rev, month == 6)
+jul_df <- subset(UK_rev, month == 7)
+
+# bar plot of mar
+ggplot(mar_df, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=cases), position = position_dodge(width = 0.9), vjust=-0.25, size=3)+
+  ggtitle('Current March Cases in The UK due to COVID-19')
+
+# bar plot of apr
+ggplot(apr_df, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') + 
+  geom_text(aes(label=cases), position = position_dodge(width = 0.9), vjust=-0.25, size=3)+
+  ggtitle('Current April Cases in The UK due to COVID-19')
+
+# bar plot of may
+ggplot(may_df, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=cases), position = position_dodge(width = 0.9), vjust=-0.25, size=3)+
+  ggtitle('Current May cases in The UK due to COVID-19')
+
+# bar plot of June
+ggplot(jun_df, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=cases), position = position_dodge(width = 0.9), vjust=-0.25, size=3) +
+  ggtitle('Current June cases in The UK due to COVID-19')
+
+# bar plot of July
+ggplot(jul_df, aes(date, cases)) +
+  geom_bar(stat = 'identity', fill = '#ff0076') +
+  geom_text(aes(label=cases), position = position_dodge(width = 0.9), vjust=-0.25, size=3) +
+  ggtitle('Current June cases in The UK due to COVID-19')
+
 
 # TOTAL DEATHS
 # bar plot
